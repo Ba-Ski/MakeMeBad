@@ -1,0 +1,6 @@
+C:\Users\P\Dropbox\IT\Algorithms\MakeMeBad\MakeMeBad\bin\Debug\MakeMeBad.exe.config
+C:\Users\P\Dropbox\IT\Algorithms\MakeMeBad\MakeMeBad\obj\Debug\MakeMeBad.csprojResolveAssemblyReference.cache
+C:\Users\P\Dropbox\IT\Algorithms\MakeMeBad\MakeMeBad\bin\Debug\MakeMeBad.exe
+C:\Users\P\Dropbox\IT\Algorithms\MakeMeBad\MakeMeBad\bin\Debug\MakeMeBad.pdb
+C:\Users\P\Dropbox\IT\Algorithms\MakeMeBad\MakeMeBad\obj\Debug\MakeMeBad.exe
+C:\Users\P\Dropbox\IT\Algorithms\MakeMeBad\MakeMeBad\obj\Debug\MakeMeBad.pdb
