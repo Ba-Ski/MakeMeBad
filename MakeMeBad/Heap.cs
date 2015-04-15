@@ -21,20 +21,12 @@ namespace MakeMeBad
         }
     }
 
-    class Heap
+    class Heap<K,V>
     {
-        private HeapNode[] _nodes;
+        private V[] _nodes;
         private int _nodesCount;
         private int[] _graphIndexes;
         private int _d;
-
-        /*public HeapNode this[int i]
-        {
-            get
-            {
-                return _nodes[_graphIndexes[i]];
-            }
-        }*/
 
         public  int getNodeKey(int index)
         {

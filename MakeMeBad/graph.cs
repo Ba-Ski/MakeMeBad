@@ -6,24 +6,27 @@ using System.Threading.Tasks;
 
 namespace MakeMeBad
 {
-    class GraphVertex
+    class GraphVertex<T>
     {
-        public int name { get; private set;}
-        public List<GraphEdge> neighbours;
-        public GraphVertex(int name)
+        public T name { get; private set;}
+        public List<GraphEdge<T>> neighbours;
+        public int path { get; set; }
+        GraphVertex<T> parent;
+
+        public GraphVertex(T name)
         {
             this.name = name;
-            neighbours = new List<GraphEdge>();
+            neighbours = new List<GraphEdge<T>>();
         }
 
     }
-    class GraphEdge
+    class GraphEdg<T>
     {
         public int weight{get;private set;}
-        public GraphVertex vertex {get; private set;}
-        public GraphVertex neighbour{get; private set;}
+        public GraphVertex<T> vertex {get; private set;}
+        public GraphVertex<T> neighbour{get; private set;}
         
-        public GraphEdge(int weight, GraphVertex vertex, GraphVertex neighbour)
+        public GraphEdge(int weight, GraphVertex<T> vertex, GraphVertex<T> neighbour)
         {
             this.weight = weight;
             this.vertex = vertex;
