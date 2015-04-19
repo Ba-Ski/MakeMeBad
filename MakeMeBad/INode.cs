@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace MakeMeBad
 {
-    class Bellman_Frod
+        interface INode<T>
     {
+        int  id { get; }
+        T key { get; set; }
+        int path { get; set; }
     }
 }

@@ -6,46 +6,42 @@ using System.Threading.Tasks;
 
 namespace MakeMeBad
 {
-    static class Dijkstra
+    class Dijkstra : IShortWays
     {
-        private static Heap _heap;
+        private Heap<GraphVertex<int>> _heap;
 
-        public static Result getShortestWays(int startNodeIndex, int heapNodesCount, Graph adj, int d)
+        public override void getShortestWays(int sourceIndex, Graph<int> adj, int d)
         {
-            _heap = new Heap(heapNodesCount, d);
-
+            _heap = new Heap<GraphVertex<int>>(adj.vertсiesCount,adj.getVertciesArr(), d);
            _heap.maekQueue(0);
 
-            return dijkstraAlgorith(adj, heapNodesCount);
+            dijkstraAlgorith(adj);
         }
 
-        private static Result dijkstraAlgorith(Graph adj, int heapNodesCount)
+        private void dijkstraAlgorith(Graph<int> adj)
         {
-            HeapNode minRelaxedNode;
-            Result result = new Result(heapNodesCount);
+            GraphVertex<int> minRelaxedNode;
 
-            for(int i = 0; i<heapNodesCount;i++)
+            for(int i = 0; i<adj.vertсiesCount;i++)
             {
                 minRelaxedNode = _heap.extractMin();
-
-                result.pathLength[minRelaxedNode.name] = minRelaxedNode.key;
-                result.penultimateNode[minRelaxedNode.name] = minRelaxedNode.parent;
  
-                for(int j=0; j<adj[minRelaxedNode.name].neighbours.Count; j++)
+                for(int j=0; j<minRelaxedNode.neighbours.Count; j++)
                 {
-                    justRelax(minRelaxedNode, adj[minRelaxedNode.name].neighbours[j]);
+                    justRelax(minRelaxedNode.neighbours[j]);
                 }
             }
 
-            return result;
         }
         
-         private static void justRelax(HeapNode parent, GraphEdge edge)
+         protected override void justRelax(GraphEdge<int> edge)
         {
-            var path = parent.key + edge.weight;
-            if (_heap.getNodeKey(edge.neighbour.name) > path && path >= 0)
+            var path = edge.vertex.path + edge.weight;
+            if (edge.neighbour.path  > path && path >= 0)
             {
-                _heap.setNewKey(edge.neighbour.name, path, parent.name);
+                edge.neighbour.path = path;
+                edge.neighbour.parent = edge.vertex;
+                _heap.siftUp(edge.neighbour.id);
             }
         }
 

@@ -7,107 +7,91 @@ using System.Threading.Tasks;
 namespace MakeMeBad
 {
 
-    class HeapNode
+    class Heap<T> where T : INode<int>
     {
-        public int key { get; set; }
-        public int name { get; private  set; }
-        public int parent { get; set; }
-
-        public HeapNode(int key, int name, int parent)
-        {
-            this.key = key;
-            this.name = name;
-            this.parent = parent;
-        }
-    }
-
-    class Heap<K,V>
-    {
-        private V[] _nodes;
+        private T[] _nodes;
+        private T[] _source;
         private int _nodesCount;
-        private int[] _graphIndexes;
+        private int[] _conformityArr;
         private int _d;
 
-        public  int getNodeKey(int index)
+        public Heap(int nodesCount, T[] source, int d)
         {
-            return _nodes[_graphIndexes[index]].key;
-        }
-
-        public void setNewKey(int index, int key, int parent)
-        {
-            _nodes[_graphIndexes[index]].key = key;
-            _nodes[_graphIndexes[index]].parent = parent;
-
-            siftUp(_graphIndexes[index]);
-        }
-
-        public Heap(int nodesCount, int d)
-        {
+            _source = source;
+            _nodes = new T[nodesCount];
             _nodesCount = nodesCount;
-            _nodes = new HeapNode[_nodesCount];
-            _graphIndexes = new int[_nodesCount];
+            _conformityArr = new int[_nodesCount];
             _d = d;
 
         }
 
         public void maekQueue(int startNode)
         {
-            for (int i = 0; i < _nodesCount;i++ )
+            for (int i = 0; i < _nodesCount; i++)
             {
-                _nodes[i] = new HeapNode(int.MaxValue, i, 0);
-                _graphIndexes[i] = i;
+                _conformityArr[i] = i;
+                _nodes[i] = _source[i];
             }
 
-                _nodes[startNode].key = 0;
-                siftUp(startNode);
-        }
+            _nodes[startNode].path = 0;
+            interSiftUp(startNode);
+        } 
 
         public void siftDown(int pos)
         {
+            interSiftDown(_conformityArr[pos]);
+        }
 
-            HeapNode insertedNode = _nodes[pos];
+        private void interSiftDown(int pos)
+        {
+
+            T insertedNode = _nodes[pos];
             int nextChild = minChild(pos);
 
-            while (nextChild != 0 && _nodes[nextChild].key < insertedNode.key)
+            while (nextChild != 0 && _nodes[nextChild].path < insertedNode.path)
             {
                 _nodes[pos] = _nodes[nextChild];
-                _graphIndexes[_nodes[nextChild].name] = pos;
+                _conformityArr[_nodes[nextChild].id] = pos;
                 pos = nextChild;
                 nextChild = minChild(pos);
             }
 
             _nodes[pos] = insertedNode;
-            _graphIndexes[insertedNode.name] = pos;
+            _conformityArr[insertedNode.id] = pos;
 
         }
-
         public void siftUp(int pos)
         {
-            HeapNode changedNode = _nodes[pos];
+            interSiftUp(_conformityArr[pos]);
+        }
+
+        private void interSiftUp(int pos)
+        {
+            T changedNode = _nodes[pos];
             int parentNodeIndex = parent(pos);
 
-            while (pos != 0 && _nodes[parentNodeIndex].key > changedNode.key)
+            while (pos != 0 && _nodes[parentNodeIndex].path > changedNode.path)
             {
                 _nodes[pos] = _nodes[parentNodeIndex];
-                _graphIndexes[_nodes[parentNodeIndex].name] = pos;
+                _conformityArr[_nodes[parentNodeIndex].id] = pos;
                 pos = parentNodeIndex;
                 parentNodeIndex = parent(pos);
             }
 
             _nodes[pos] = changedNode;
-            _graphIndexes[changedNode.name] = pos;
+            _conformityArr[changedNode.id] = pos;
         }
 
-        public HeapNode extractMin()
+        public T extractMin()
         {
-            HeapNode minRealxedNode = _nodes[0];
+            T minRealxedNode = _nodes[0];
             _nodes[0] = _nodes[_nodesCount - 1];
-            _graphIndexes[_nodes[_nodesCount - 1].name] = 0;
+            _conformityArr[_nodes[_nodesCount - 1].id] = 0;
             _nodes[_nodesCount - 1] = minRealxedNode;
-            _graphIndexes[minRealxedNode.name] = _nodesCount - 1;
+            _conformityArr[minRealxedNode.id] = _nodesCount - 1;
             _nodesCount--;
 
-            siftDown(0);
+            interSiftDown(0);
 
             return minRealxedNode;
         }
@@ -115,20 +99,20 @@ namespace MakeMeBad
         private int minChild(int pos)
         {
             int fChild, lChild;
-            int minKey;
+            int minpath;
             int minNodeIndex;
 
             fChild = firstChild(pos);
             if (fChild == 0) return 0;
             lChild = lastChild(pos);
-            minKey = _nodes[fChild].key;
+            minpath = _nodes[fChild].path;
             minNodeIndex = fChild;
 
             for (int chi = fChild + 1; chi <= lChild; chi++)
             {
-                if (_nodes[chi].key < minKey)
+                if (_nodes[chi].path < minpath)
                 {
-                    minKey = _nodes[chi].key;
+                    minpath = _nodes[chi].path;
                     minNodeIndex = chi;
                 }
             }
@@ -159,3 +143,4 @@ namespace MakeMeBad
         }
     }
 }
+

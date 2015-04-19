@@ -41,14 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bellman-Frod.cs" />
     <Compile Include="constants.cs" />
     <Compile Include="Dijkstra.cs" />
+    <Compile Include="Bellman-Ford.cs" />
     <Compile Include="graph.cs" />
     <Compile Include="Heap.cs" />
+    <Compile Include="INode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShortWays.cs" />
+    <Compile Include="IShortWays.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

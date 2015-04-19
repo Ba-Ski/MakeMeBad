@@ -6,21 +6,24 @@ using System.Threading.Tasks;
 
 namespace MakeMeBad
 {
-    class GraphVertex<T>
+    class GraphVertex<T> : INode<T>
     {
-        public T name { get; private set;}
+        public int id { get; private set;}
         public List<GraphEdge<T>> neighbours;
+        public T key { get; set; }
         public int path { get; set; }
-        GraphVertex<T> parent;
+        public GraphVertex<T> parent { get; set; }
 
-        public GraphVertex(T name)
+        public GraphVertex(int id)
         {
-            this.name = name;
+            this.id = id;
+            this.parent = this;
+            this.path = int.MaxValue;
             neighbours = new List<GraphEdge<T>>();
         }
 
     }
-    class GraphEdg<T>
+    class GraphEdge<T>
     {
         public int weight{get;private set;}
         public GraphVertex<T> vertex {get; private set;}
@@ -35,69 +38,84 @@ namespace MakeMeBad
         }
     }
 
-    class Graph
+    class Graph<T>
     {
-         private GraphVertex[] _verteciesArray;
-         private int _vertexCount;
+        public int vertсiesCount { get; private set; }
+        public int edgesCount { get; private set; }
+         private GraphVertex<T>[] _verteciesArray;
 
-        public GraphVertex this[int i]
+        public GraphVertex<T> this[int i]
          {
              get
              {
-                 if (i < _vertexCount && i >= 0)
+                 if (i < vertсiesCount && i >= 0)
                      return _verteciesArray[i];
                  else return null;
              }
              set
              {
-                 if(i<_vertexCount)
+                 if(i<vertсiesCount)
                  {
                      _verteciesArray[i] = value;
                  }
              }
         }
 
-            public Graph(int vertexCount)
+            public Graph(int vertсiesCount, int edgesCount)
             {
-                this._vertexCount=vertexCount;
-                _verteciesArray = new GraphVertex[_vertexCount];
+                this.vertсiesCount=vertсiesCount;
+                this.edgesCount = edgesCount;
+                _verteciesArray = new GraphVertex<T>[vertсiesCount];
             }
-
-            public void generateGraph(int edgesCount, int weightMin, int weightMax)
+            
+            public GraphVertex<T>[] getVertciesArr()
             {
-                _verteciesArray[0] = new GraphVertex(0);
-                Random rand = new Random();
-                int vertexInd;
-                for(int i =1; i<_vertexCount; i++)
-                {
-                    _verteciesArray[i]= new GraphVertex(i);
-
-                    generateEdge(i,i, weightMax, weightMin);                    
-
-                }
-
-                for(int i=0;i<edgesCount - _vertexCount +1;i++)
-                {
-                    vertexInd = rand.Next(0, _vertexCount);
-                    generateEdge(_vertexCount-1, _vertexCount-1, weightMax, weightMin);                    
-                }
-
-
+                return _verteciesArray;
             }
-
-        private void generateEdge(int vertexInd, int vertexNumMax, int weightMax , int weightMin)
+            public void generateGraph(int weightMin, int weightMax)
             {
-                int neighbourInd;
+                _verteciesArray[0] = new GraphVertex<T>(0);
                 Random rand = new Random();
-                neighbourInd = rand.Next(0, vertexNumMax+1);
+                int vertexInd, neighbourInd;
 
-                while (vertexInd == neighbourInd || _verteciesArray[vertexInd].neighbours.Any(t => t.neighbour == _verteciesArray[neighbourInd])==true)
+                for (int i = 1; i < vertсiesCount; i++)
                 {
-                    neighbourInd = rand.Next(0, vertexNumMax+1);
+                    _verteciesArray[i] = new GraphVertex<T>(i);
+
+                    neighbourInd = rand.Next(0, i);
+
+                    while (i == neighbourInd ||
+                        _verteciesArray[i].neighbours.Any(t => t.neighbour == _verteciesArray[neighbourInd]) == true)
+                    {
+                        neighbourInd = rand.Next(0, vertсiesCount);
+                    }
+                    GraphEdge<T> edge = new GraphEdge<T>(rand.Next(weightMin, weightMax + 1),
+                        _verteciesArray[i], _verteciesArray[neighbourInd]);
+
+                    _verteciesArray[i].neighbours.Add(edge);
+
                 }
-                    GraphEdge edge = new GraphEdge(rand.Next(weightMin, weightMax+1), _verteciesArray[vertexInd], _verteciesArray[neighbourInd]);
+
+                for (int i = 0; i < edgesCount - vertсiesCount + 1; i++)
+                {
+                    vertexInd = rand.Next(0, vertсiesCount);
+
+                    vertexInd = rand.Next(0, vertсiesCount);
+                    neighbourInd = rand.Next(0, vertсiesCount);
+
+                    while (vertexInd == neighbourInd ||
+                        _verteciesArray[vertexInd].neighbours.Any(t => t.neighbour == _verteciesArray[neighbourInd]) == true)
+                    {
+                        vertexInd = rand.Next(0, vertсiesCount);
+                        neighbourInd = rand.Next(0, vertсiesCount);
+                    }
+                    GraphEdge<T> edge = new GraphEdge<T>(rand.Next(weightMin, weightMax + 1), _verteciesArray[vertexInd], _verteciesArray[neighbourInd]);
                     _verteciesArray[vertexInd].neighbours.Add(edge);
+                }
+
+
             }
+
          }
     }
 
