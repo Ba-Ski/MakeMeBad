@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace MakeMeBad
 {
-    class GraphVertex<T> : INode<T>
+    class GraphVertex<T> : INode<int,T>
     {
-        public int id { get; private set;}
+        public int key { get; private set;}
         public List<GraphEdge<T>> neighbours;
-        public T key { get; set; }
+        public T value { get; set; }
         public int path { get; set; }
         public GraphVertex<T> parent { get; set; }
 
         public GraphVertex(int id)
         {
-            this.id = id;
+            this.key = id;
             this.parent = this;
             this.path = int.MaxValue;
             neighbours = new List<GraphEdge<T>>();
@@ -68,10 +68,6 @@ namespace MakeMeBad
                 _verteciesArray = new GraphVertex<T>[vertсiesCount];
             }
             
-            public GraphVertex<T>[] getVertciesArr()
-            {
-                return _verteciesArray;
-            }
             public void generateGraph(int weightMin, int weightMax)
             {
                 _verteciesArray[0] = new GraphVertex<T>(0);

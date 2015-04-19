@@ -9,7 +9,7 @@ namespace MakeMeBad
     class BellmanFord : IShortWays
     {
 
-        public override void getShortestWays(int sourceIndex, Graph<int> adj, int d)
+        public override void getShortestWays(int sourceIndex, Graph<int> adj, int d=0)
         {
 
             int edgeNumber, vertexNumber;
