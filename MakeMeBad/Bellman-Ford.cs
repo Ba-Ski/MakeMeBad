@@ -6,36 +6,36 @@ using System.Threading.Tasks;
 
 namespace MakeMeBad
 {
-    class BellmanFord : IShortWays
+    class BellmanFord : ShortWays
     {
 
-        public override void getShortestWays(int sourceIndex, Graph<int> adj, int d=0)
+        public override void getShortestWays(int sourceIndex, Graph<int, int> adj, int d = 0)
         {
 
             int edgeNumber, vertexNumber;
             adj[sourceIndex].path = 0;
 
-            for(int i = 0; i <adj.vertсiesCount; i++)
+            for (int i = 0; i < adj.vertсiesCount; i++)
             {
                 edgeNumber = 0;
                 vertexNumber = 0;
-                for(int j = 0; j < adj.edgesCount; j++, edgeNumber++)
+                for (int j = 0; j < adj.edgesCount; j++, edgeNumber++)
                 {
-                    if(edgeNumber>=adj[vertexNumber].neighbours.Count())
+                    if (edgeNumber >= adj[vertexNumber].neighbours.Count())
                     {
                         vertexNumber++;
-                        edgeNumber=0;
+                        edgeNumber = 0;
                     }
 
                     justRelax(adj[vertexNumber].neighbours[edgeNumber]);
                 }
             }
-            vertexNumber =0 ;
+            vertexNumber = 0;
             edgeNumber = 0;
 
-            for(int i = 0; i< adj.edgesCount; i++, edgeNumber++)
+            for (int i = 0; i < adj.edgesCount; i++, edgeNumber++)
             {
-                if(edgeNumber>=adj[vertexNumber].neighbours.Count)
+                if (edgeNumber >= adj[vertexNumber].neighbours.Count)
                 {
                     vertexNumber++;
                     edgeNumber = 0;
@@ -46,13 +46,13 @@ namespace MakeMeBad
             }
         }
 
-        protected override void justRelax(GraphEdge<int> edge)
+        protected override void justRelax(GraphEdge<int, int> edge)
         {
             var path = edge.vertex.path + edge.weight;
-            if(edge.neighbour.path > path && path >= 0)
+            if (edge.neighbour.path > path && path >= 0)
             {
                 edge.neighbour.path = path;
-                edge.neighbour.parent = edge.vertex;
+                edge.neighbour.predcessor = edge.vertex;
             }
         }
     }

@@ -42,14 +42,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="constants.cs" />
+    <Compile Include="Dijkstra%27s heap.cs" />
     <Compile Include="Dijkstra.cs" />
     <Compile Include="Bellman-Ford.cs" />
+    <Compile Include="IntGraph.cs" />
     <Compile Include="graph.cs" />
     <Compile Include="Heap.cs" />
-    <Compile Include="INode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IShortWays.cs" />
+    <Compile Include="ShortWays.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

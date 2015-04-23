@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 namespace MakeMeBad
 {
 
-    class Heap<T> where T : INode<int,int>
+    class Heap<T> where T : IComparable
     {
         protected T[] _nodes;
         protected int _heapCurrentSize;
-        int extracted;
         private int _d;
 
         public Heap(int nodesCount, int d)
@@ -19,24 +18,21 @@ namespace MakeMeBad
             _nodes = new T[nodesCount];
             _heapCurrentSize = 0;
             _d = d;
-            extracted = 0;
-
         }
 
 
         public bool empty()
         {
-            if (_heapCurrentSize == 0) return true;
-            else return false;
+            return _heapCurrentSize == 0;
         }
 
-        private void siftDown(int pos)
+        protected virtual void siftDown(int pos)
         {
 
             T insertedNode = _nodes[pos];
             int nextChild = minChild(pos);
 
-            while (nextChild != 0 && _nodes[nextChild].value < insertedNode.value)
+            while (nextChild != 0 && _nodes[nextChild].CompareTo(insertedNode) < 0)
             {
                 _nodes[pos] = _nodes[nextChild];
                 pos = nextChild;
@@ -47,20 +43,29 @@ namespace MakeMeBad
 
         }
 
-        public void insertNode(T node)
+        public virtual void insertNode(T node)
         {
+            if (_heapCurrentSize >= _nodes.Length) throw new ApplicationException("wtf?");
             _nodes[_heapCurrentSize] = node;
             _heapCurrentSize++;
-            if (_heapCurrentSize > _nodes.Length) throw new ApplicationException("wtf?");
-            siftUp(_heapCurrentSize-1);
+            siftUp(_heapCurrentSize - 1);
         }
 
-        private void siftUp(int pos)
+        /*public virtual void decreaseKey(int pos, T value)
+        {
+            if (pos < _heapCurrentSize && pos > 0)
+            {
+                _nodes[pos].CompareTo(value);
+                siftUp(pos);
+            }
+        }*/
+
+        protected virtual void siftUp(int pos)
         {
             T changedNode = _nodes[pos];
             int parentNodeIndex = parent(pos);
 
-            while (pos != 0 && _nodes[parentNodeIndex].value > changedNode.value)
+            while (pos != 0 && _nodes[parentNodeIndex].CompareTo(changedNode) > 0)
             {
                 _nodes[pos] = _nodes[parentNodeIndex];
                 pos = parentNodeIndex;
@@ -70,36 +75,35 @@ namespace MakeMeBad
             _nodes[pos] = changedNode;
         }
 
-        public T extractMin()
+        public virtual T extractMin()
         {
             if (_heapCurrentSize == 0) throw new ApplicationException("heap is empty");
             T minRealxedNode = _nodes[0];
             _nodes[0] = _nodes[_heapCurrentSize - 1];
             _heapCurrentSize--;
-            extracted++;
-            if(_heapCurrentSize>0)
-            siftDown(0);
+            if (_heapCurrentSize > 0)
+                siftDown(0);
 
             return minRealxedNode;
         }
 
-        private int minChild(int pos)
+        protected int minChild(int pos)
         {
             int fChild, lChild;
-            int minvalue;
+            T minValueNode;
             int minNodeIndex;
 
             fChild = firstChild(pos);
             if (fChild == 0) return 0;
             lChild = lastChild(pos);
-            minvalue = _nodes[fChild].value;
+            minValueNode = _nodes[fChild];
             minNodeIndex = fChild;
 
             for (int chi = fChild + 1; chi <= lChild; chi++)
             {
-                if (_nodes[chi].value < minvalue)
+                if (_nodes[chi].CompareTo(minValueNode) < 0)
                 {
-                    minvalue = _nodes[chi].value;
+                    minValueNode = _nodes[chi];
                     minNodeIndex = chi;
                 }
             }
@@ -107,21 +111,21 @@ namespace MakeMeBad
             return minNodeIndex;
         }
 
-        private int firstChild(int pos)
+        protected int firstChild(int pos)
         {
             int index = pos * _d + 1;
             return index >= _heapCurrentSize ? 0 : index;
         }
 
-        private int lastChild(int pos)
+        protected int lastChild(int pos)
         {
             int fChi = firstChild(pos);
             if (fChi == 0) return 0;
-            int lChi = fChi + _d -1;
+            int lChi = fChi + _d - 1;
             return lChi < _heapCurrentSize ? lChi : _heapCurrentSize - 1;
         }
 
-        private int parent(int pos)
+        protected int parent(int pos)
         {
             int index = pos / _d;
             if (pos % _d == 0 && index != 0)

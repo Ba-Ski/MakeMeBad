@@ -6,57 +6,48 @@ using System.Threading.Tasks;
 
 namespace MakeMeBad
 {
-	class Dijkstra : IShortWays
-	{
-		private Heap<MyKeyValuePair<int,int>> _heap;
-		private int[] dist;
-		public Dijkstra()
-		{
-		}
+    class Dijkstra : ShortWays
+    {
+        private Dijkstra_s_Heap<GraphVertex<int, int>> _heap;
 
-		public override void getShortestWays(int sourceIndex, Graph<int> adj, int d)
-		{
-			_heap = new Heap<MyKeyValuePair<int,int>>(adj.vertсiesCount, d);
-			dist = new int[adj.vertсiesCount];
-			for (int i = 0; i < dist.Length; i++)
-			{
-			 dist[i]=int.MaxValue;
-			}
-			dist[sourceIndex] = 0;
-			MyKeyValuePair<int, int> startNode = new MyKeyValuePair<int, int>(sourceIndex,dist[sourceIndex]);
-			_heap.insertNode(startNode);
-			dijkstraAlgorith(adj);
-		}
 
-		private void dijkstraAlgorith(Graph<int> adj)
-		{
-			MyKeyValuePair<int,int> minRelaxedNode;
+        public override void getShortestWays(int sourceIndex, Graph<int, int> adj, int d)
+        {
+            _heap = new Dijkstra_s_Heap<GraphVertex<int, int>>(adj.vertсiesCount, d);
 
-			while(!_heap.empty())
-			{
-				minRelaxedNode = _heap.extractMin();
-				if (minRelaxedNode.value > dist[minRelaxedNode.key]) continue;
-				adj[minRelaxedNode.key].path = minRelaxedNode.value;
+            adj[0].path = 0;
+            _heap.insertNode(adj[0]);
+            dijkstraAlgorith(adj);
+        }
 
-				for(int j=0; j<adj[minRelaxedNode.key].neighbours.Count; j++)
-				{
-					justRelax(adj[minRelaxedNode.key].neighbours[j]);
-				}
-			}
+        private void dijkstraAlgorith(Graph<int, int> adj)
+        {
 
-		}
-		
-		 protected override void justRelax(GraphEdge<int> edge)
-		{
-			var path = edge.vertex.path + edge.weight;
-			if (dist[edge.neighbour.key]  > path && path >= 0)
-			{
-				dist[edge.neighbour.key] = path;
-				edge.neighbour.path = path;
-				edge.neighbour.parent = edge.vertex;
-				_heap.insertNode(new MyKeyValuePair<int,int>(edge.neighbour.key,edge.neighbour.path));
-			}
-		}
+            while (!_heap.empty())
+            {
+                var minRelaxedNode = _heap.extractMin();
 
-	}
+                for (int j = 0; j < adj[minRelaxedNode.key].neighbours.Count; j++)
+                {
+                    justRelax(adj[minRelaxedNode.key].neighbours[j]);
+                }
+            }
+
+        }
+
+        protected override void justRelax(GraphEdge<int, int> edge)
+        {
+            var path = edge.vertex.path + edge.weight;
+            if (edge.neighbour.path > path && path >= 0)
+            {
+                edge.neighbour.path = path;
+                edge.neighbour.predcessor = edge.vertex;
+                if (_heap.Contains(edge.neighbour)) _heap.decreaseKey(edge.neighbour);
+                else
+                    _heap.insertNode(edge.neighbour);
+
+            }
+        }
+
+    }
 }

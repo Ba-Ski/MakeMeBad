@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MakeMeBad
 {
-    static class constants
+    static class Constants
     {
         public const int vertexCountMin = 101;
         public const int vertexCountMax = 10001;

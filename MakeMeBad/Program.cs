@@ -16,50 +16,50 @@ namespace MakeMeBad
         {
 
             double time;
-            Graph<int> adj;
+            IntGraph adj;
             Dijkstra dijk = new Dijkstra();
             Stopwatch watch;
 
             StreamWriter output = new StreamWriter("out_d+1.txt");
 
-            for(int i = constants.vertexCountMin; i<constants.vertexCountMax; i+=step)
+            for (int i = Constants.vertexCountMin; i < Constants.vertexCountMax; i += step)
             {
-                adj = new Graph<int>(i, 90*i);
-                adj.generateGraph(constants.weightMin, constants.weightMax);
+                adj = new IntGraph(i, 90 * i);
+                adj.generateGraph(Constants.weightMin, Constants.weightMax);
                 watch = Stopwatch.StartNew();
-                dijk.getShortestWays(0, adj, constants.d + 1);
+                dijk.getShortestWays(0, adj, Constants.d + 1);
                 watch.Stop();
                 time = watch.ElapsedMilliseconds;
 
                 Console.WriteLine("d+1 {0} = {1}", i, time);
-                 output.WriteLine("{0} = {1}", i, time);
-            }         
+                output.Write(time + "/t");
+            }
 
             output.Close();
         }
 
         static void dPlusTwoHeap(int step)
         {
-            
+
             double time;
-            Graph<int> adj;
+            IntGraph adj;
             Dijkstra dijk = new Dijkstra();
             Stopwatch watch;
 
             StreamWriter output = new StreamWriter("out_d+2.txt");
 
-            for(int i = constants.vertexCountMin; i<constants.vertexCountMax; i+=step)
+            for (int i = Constants.vertexCountMin; i < Constants.vertexCountMax; i += step)
             {
-                adj = new Graph<int>(i, 90*i);
-                adj.generateGraph(constants.weightMin, constants.weightMax);
+                adj = new IntGraph(i, 90 * i);
+                adj.generateGraph(Constants.weightMin, Constants.weightMax);
 
                 watch = Stopwatch.StartNew();
-                dijk.getShortestWays(0, adj, constants.d + 2);
+                dijk.getShortestWays(0, adj, Constants.d + 2);
                 watch.Stop();
                 time = watch.ElapsedMilliseconds;
                 Console.WriteLine("d+2 {0} = {1}", i, time);
-                output.WriteLine("{0} = {1}", i, time);
-                 
+                output.Write(time + "\t");
+
             }
 
             output.Close();
@@ -68,36 +68,36 @@ namespace MakeMeBad
         static void BellmanFordSoSlow(int step)
         {
             double time;
-            Graph<int> adj;
+            IntGraph adj;
             Stopwatch watch;
             BellmanFord BF = new BellmanFord();
 
             StreamWriter output = new StreamWriter("out_bellmanford.txt");
 
-            for(int i = constants.vertexCountMin; i<constants.vertexCountMax; i+=step)
+            for (int i = Constants.vertexCountMin; i < Constants.vertexCountMax; i += step)
             {
-                adj = new Graph<int>(i, 90*i);
-                adj.generateGraph(constants.weightMin, constants.weightMax);
+                adj = new IntGraph(i, 90 * i);
+                adj.generateGraph(Constants.weightMin, Constants.weightMax);
 
                 watch = Stopwatch.StartNew();
                 BF.getShortestWays(0, adj);
                 watch.Stop();
                 time = watch.ElapsedMilliseconds;
                 Console.WriteLine("bellman-ford {0} = {1}", i, time);
-                output.WriteLine("{0} = {1}", i, time);
-                 
+                output.WriteLine(time + "/t");
+
             }
 
             output.Close();
 
         }
-             
+
 
         static void Main(string[] args)
         {
 
-            Thread dPlusOne = new Thread(()=>dPlusOneHeap(100));
-            Thread dPlusTwo = new Thread(()=>dPlusTwoHeap(100));
+            Thread dPlusOne = new Thread(() => dPlusOneHeap(100));
+            Thread dPlusTwo = new Thread(() => dPlusTwoHeap(100));
             //Thread bellmanFord = new Thread(()=>BellmanFordSoSlow(100));
 
             dPlusOne.Start();
