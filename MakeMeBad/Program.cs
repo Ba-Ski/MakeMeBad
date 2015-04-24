@@ -19,23 +19,42 @@ namespace MakeMeBad
             IntGraph adj;
             Dijkstra dijk = new Dijkstra();
             Stopwatch watch;
+            int cf;
 
             StreamWriter output = new StreamWriter("out_d+1.txt");
+            StreamWriter bitch = new StreamWriter("out_d+2.txt");
 
             for (int i = Constants.vertexCountMin; i < Constants.vertexCountMax; i += step)
             {
-                adj = new IntGraph(i, 90 * i);
+                if (i < 1000) cf = (int)(i * 0.9 * i);
+                else cf = i * 790;
+                adj = new IntGraph(i, cf);
                 adj.generateGraph(Constants.weightMin, Constants.weightMax);
                 watch = Stopwatch.StartNew();
                 dijk.getShortestWays(0, adj, Constants.d + 1);
                 watch.Stop();
                 time = watch.ElapsedMilliseconds;
+                Console.WriteLine("d+1 "+ time);
+                output.Write(time + "\t");
 
-                Console.WriteLine("d+1 {0} = {1}", i, time);
-                output.Write(time + "/t");
+                for (int j = 0; j < adj.vertсiesCount; j++)
+                {
+                    adj[j].path = int.MaxValue;
+                    adj[j].predcessor = adj[j];
+                }
+
+                watch = Stopwatch.StartNew();
+                dijk.getShortestWays(0, adj, Constants.d + 2);
+                watch.Stop();
+                time = watch.ElapsedMilliseconds;
+                Console.WriteLine("d+2 " + time);
+
+                //Console.WriteLine("d+1 {0} = {1}", i, time);
+                bitch.Write(time + "\t");
             }
 
             output.Close();
+            bitch.Close();
         }
 
         static void dPlusTwoHeap(int step)
@@ -45,12 +64,15 @@ namespace MakeMeBad
             IntGraph adj;
             Dijkstra dijk = new Dijkstra();
             Stopwatch watch;
+            int cf;
 
             StreamWriter output = new StreamWriter("out_d+2.txt");
 
             for (int i = Constants.vertexCountMin; i < Constants.vertexCountMax; i += step)
             {
-                adj = new IntGraph(i, 90 * i);
+                if(i<1000) cf = (int)(i* 0.9 * i);
+                else cf = i*890;
+                adj = new IntGraph(i,cf );
                 adj.generateGraph(Constants.weightMin, Constants.weightMax);
 
                 watch = Stopwatch.StartNew();
@@ -84,7 +106,7 @@ namespace MakeMeBad
                 watch.Stop();
                 time = watch.ElapsedMilliseconds;
                 Console.WriteLine("bellman-ford {0} = {1}", i, time);
-                output.WriteLine(time + "/t");
+                output.WriteLine(time + "\t");
 
             }
 
@@ -97,15 +119,15 @@ namespace MakeMeBad
         {
 
             Thread dPlusOne = new Thread(() => dPlusOneHeap(100));
-            Thread dPlusTwo = new Thread(() => dPlusTwoHeap(100));
+            //Thread dPlusTwo = new Thread(() => dPlusTwoHeap(100));
             //Thread bellmanFord = new Thread(()=>BellmanFordSoSlow(100));
 
             dPlusOne.Start();
-            dPlusTwo.Start();
+            //dPlusTwo.Start();
             //bellmanFord.Start();
 
             dPlusOne.Join();
-            dPlusTwo.Join();
+            //dPlusTwo.Join();
             //bellmanFord.Join();
 
         }

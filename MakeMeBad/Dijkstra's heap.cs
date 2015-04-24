@@ -43,11 +43,13 @@ namespace MakeMeBad
             T minRealxedNode = _nodes[0];
             _conformityDick.Remove(_nodes[0]);
             _nodes[0] = _nodes[_heapCurrentSize - 1];
-            _conformityDick[_nodes[0]] = 0;
+            _nodes[_heapCurrentSize-1] = default(T);
             _heapCurrentSize--;
             if (_heapCurrentSize > 0)
+            {
+                _conformityDick[_nodes[0]] = 0;
                 siftDown(0);
-
+            }
             return minRealxedNode;
         }
 
@@ -65,6 +67,23 @@ namespace MakeMeBad
             }
 
             _nodes[pos] = insertedNode;
+            _conformityDick[_nodes[pos]] = pos;
+        }
+
+        protected override void siftUp(int pos)
+        {
+            T changedNode = _nodes[pos];
+            int parentNodeIndex = parent(pos);
+
+            while (pos != 0 && _nodes[parentNodeIndex].CompareTo(changedNode) > 0)
+            {
+                _nodes[pos] = _nodes[parentNodeIndex];
+                _conformityDick[_nodes[pos]] = pos;
+                pos = parentNodeIndex;
+                parentNodeIndex = parent(pos);
+            }
+
+            _nodes[pos] = changedNode;
             _conformityDick[_nodes[pos]] = pos;
         }
     }
