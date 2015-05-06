@@ -8,17 +8,17 @@ namespace MakeMeBad
 {
     class Dijkstra_s_Heap<T> : Heap<T> where T : IComparable
     {
-        private Dictionary<T, int> _conformityDick;
+        private Dictionary<T, int> _conformityDickionary;
 
         public Dijkstra_s_Heap(int nodesCount, int d)
             : base(nodesCount, d)
         {
-            _conformityDick = new Dictionary<T, int>(nodesCount);
+            _conformityDickionary = new Dictionary<T, int>(nodesCount);
         }
 
         public bool Contains(T key)
         {
-            return _conformityDick.ContainsKey(key);
+            return _conformityDickionary.ContainsKey(key);
         }
 
         public override void insertNode(T node)
@@ -26,28 +26,28 @@ namespace MakeMeBad
 
             if (_heapCurrentSize >= _nodes.Length) throw new ApplicationException("wtf?");
             _nodes[_heapCurrentSize] = node;
-            _conformityDick.Add(node, _heapCurrentSize);
+            _conformityDickionary.Add(node, _heapCurrentSize);
             _heapCurrentSize++;
             siftUp(_heapCurrentSize - 1);
         }
 
         public void decreaseKey(T node)
         {
-            _nodes[_conformityDick[node]] = node;
-            siftUp(_conformityDick[node]);
+            _nodes[_conformityDickionary[node]] = node;
+            siftUp(_conformityDickionary[node]);
         }
 
         public override T extractMin()
         {
             if (_heapCurrentSize == 0) throw new ApplicationException("heap is empty");
             T minRealxedNode = _nodes[0];
-            _conformityDick.Remove(_nodes[0]);
+            _conformityDickionary.Remove(_nodes[0]);
             _nodes[0] = _nodes[_heapCurrentSize - 1];
             _nodes[_heapCurrentSize-1] = default(T);
             _heapCurrentSize--;
             if (_heapCurrentSize > 0)
             {
-                _conformityDick[_nodes[0]] = 0;
+                _conformityDickionary[_nodes[0]] = 0;
                 siftDown(0);
             }
             return minRealxedNode;
@@ -61,13 +61,13 @@ namespace MakeMeBad
             while (nextChild != 0 && _nodes[nextChild].CompareTo(insertedNode) < 0)
             {
                 _nodes[pos] = _nodes[nextChild];
-                _conformityDick[_nodes[pos]] = pos;
+                _conformityDickionary[_nodes[pos]] = pos;
                 pos = nextChild;
                 nextChild = minChild(pos);
             }
 
             _nodes[pos] = insertedNode;
-            _conformityDick[_nodes[pos]] = pos;
+            _conformityDickionary[_nodes[pos]] = pos;
         }
 
         protected override void siftUp(int pos)
@@ -78,13 +78,13 @@ namespace MakeMeBad
             while (pos != 0 && _nodes[parentNodeIndex].CompareTo(changedNode) > 0)
             {
                 _nodes[pos] = _nodes[parentNodeIndex];
-                _conformityDick[_nodes[pos]] = pos;
+                _conformityDickionary[_nodes[pos]] = pos;
                 pos = parentNodeIndex;
                 parentNodeIndex = parent(pos);
             }
 
             _nodes[pos] = changedNode;
-            _conformityDick[_nodes[pos]] = pos;
+            _conformityDickionary[_nodes[pos]] = pos;
         }
     }
 }
