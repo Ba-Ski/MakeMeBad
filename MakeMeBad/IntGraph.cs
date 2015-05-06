@@ -25,8 +25,7 @@ namespace MakeMeBad
 
                 neighbourInd = rand.Next(0, i);
 
-                while (i == neighbourInd ||
-                    _verteciesArray[i].neighbours.Any(t => t.neighbour == _verteciesArray[neighbourInd]) == true)
+                while (i == neighbourInd)
                 {
                     neighbourInd = rand.Next(0, vertсiesCount);
                 }
