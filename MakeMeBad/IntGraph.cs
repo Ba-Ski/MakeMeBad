@@ -23,14 +23,11 @@ namespace MakeMeBad
             {
                 _verteciesArray[i] = new GraphVertex<int, int>(i);
 
-                neighbourInd = rand.Next(0, i);
+                vertexInd = i;
+                neighbourInd = rand.Next(0, i-1);
 
-                while (i == neighbourInd)
-                {
-                    neighbourInd = rand.Next(0, vertсiesCount);
-                }
                 GraphEdge<int, int> edge = new GraphEdge<int, int>(rand.Next(weightMin, weightMax + 1),
-                    _verteciesArray[i], _verteciesArray[neighbourInd]);
+                    _verteciesArray[vertexInd], _verteciesArray[neighbourInd]);
 
                 _verteciesArray[i].neighbours.Add(edge);
 

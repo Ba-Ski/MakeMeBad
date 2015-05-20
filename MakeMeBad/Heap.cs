@@ -25,7 +25,7 @@ namespace MakeMeBad
         {
             return _heapCurrentSize == 0;
         }
-
+            
         protected virtual void siftDown(int pos)
         {
 
@@ -50,15 +50,6 @@ namespace MakeMeBad
             _heapCurrentSize++;
             siftUp(_heapCurrentSize - 1);
         }
-
-        /*public virtual void decreaseKey(int pos, T value)
-        {
-            if (pos < _heapCurrentSize && pos > 0)
-            {
-                _nodes[pos].CompareTo(value);
-                siftUp(pos);
-            }
-        }*/
 
         protected virtual void siftUp(int pos)
         {
