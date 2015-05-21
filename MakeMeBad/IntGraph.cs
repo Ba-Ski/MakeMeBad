@@ -18,18 +18,20 @@ namespace MakeMeBad
             _verteciesArray[0] = new GraphVertex<int, int>(0);
             Random rand = new Random();
             int vertexInd, neighbourInd;
+            bool[,] vertciesMap = new bool[vertсiesCount, vertсiesCount];
 
             for (int i = 1; i < vertсiesCount; i++)
             {
                 _verteciesArray[i] = new GraphVertex<int, int>(i);
 
                 vertexInd = i;
-                neighbourInd = rand.Next(0, i-1);
+                neighbourInd = rand.Next(0, i);
 
                 GraphEdge<int, int> edge = new GraphEdge<int, int>(rand.Next(weightMin, weightMax + 1),
                     _verteciesArray[vertexInd], _verteciesArray[neighbourInd]);
 
                 _verteciesArray[i].neighbours.Add(edge);
+                vertciesMap[vertexInd, neighbourInd] = true;
 
             }
 
@@ -41,7 +43,7 @@ namespace MakeMeBad
                 neighbourInd = rand.Next(0, vertсiesCount);
 
                 while (vertexInd == neighbourInd ||
-                    _verteciesArray[vertexInd].neighbours.Any(t => t.neighbour == _verteciesArray[neighbourInd]) == true)
+                    vertciesMap[vertexInd,neighbourInd] == true)
                 {
                     vertexInd = rand.Next(0, vertсiesCount);
                     neighbourInd = rand.Next(0, vertсiesCount);
